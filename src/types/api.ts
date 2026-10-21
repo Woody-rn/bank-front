@@ -71,8 +71,10 @@ export interface TransferResponse {
 // ===== Block request =====
 export interface BlockRequest {
     id: number;
-    card: { id: number; cardHolderName: string; maskedNumber?: string };
-    user: { id: number; username: string };
+    cardId: number;
+    cardHolderName: string;
+    userId: number;
+    username: string;
     status: BlockRequestStatus;
     createdAt: string;
 }

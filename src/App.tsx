@@ -3,16 +3,15 @@ import { Heading } from '@chakra-ui/react';
 import { AuthProvider, useAuth } from './auth/AuthContext';
 import { ProtectedRoute } from './auth/ProtectedRoute';
 import { Layout } from './components/Layout';
-import { Toaster } from './components/ui/toaster'; // Подключаем тостер
+import { Toaster } from './components/ui/toaster';
 import { LoginPage } from './pages/LoginPage';
 import { MyCardsPage } from './pages/user/MyCardsPage';
 import { CardDetailPage } from './pages/user/CardDetailPage';
 import { TransfersPage } from './pages/user/TransfersPage';
+import { AllCardsPage } from './pages/admin/AllCardsPage';
+import { UsersPage } from './pages/admin/UsersPage';
+import { BlockRequestsPage } from './pages/admin/BlockRequestsPage';
 
-// временные заглушки — заменим в следующих блоках
-function Stub({ title }: { title: string }) {
-    return <Heading>{title} — скоро</Heading>;
-}
 
 function HomeRedirect() {
     const { isAuthenticated, isAdmin } = useAuth();
@@ -23,9 +22,7 @@ function HomeRedirect() {
 export default function App() {
     return (
         <AuthProvider>
-            {/* Компонент для отображения уведомлений (тостов) */}
             <Toaster />
-
             <Routes>
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/" element={<HomeRedirect />} />
@@ -42,9 +39,9 @@ export default function App() {
                 {/* ADMIN */}
                 <Route element={<ProtectedRoute role="ADMIN" />}>
                     <Route element={<Layout />}>
-                        <Route path="/admin/cards" element={<Stub title="Все карты" />} />
-                        <Route path="/admin/users" element={<Stub title="Пользователи" />} />
-                        <Route path="/admin/block-requests" element={<Stub title="Заявки на блокировку" />} />
+                        <Route path="/admin/cards" element={<AllCardsPage />} />
+                        <Route path="/admin/users" element={<UsersPage />} />
+                        <Route path="/admin/block-requests" element={<BlockRequestsPage />} />
                     </Route>
                 </Route>
 
