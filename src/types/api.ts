@@ -96,3 +96,6 @@ export interface ErrorResponse {
     message: string;
     timestamp: string;
 }
+
+// Добавки для UI
+export interface CardDetails extends CardResponse {}

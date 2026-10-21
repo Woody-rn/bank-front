@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react';
+import { useState, type SubmitEvent } from 'react';
 import {
     Box,
     Button,
@@ -19,7 +19,7 @@ export function LoginPage() {
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
 
-    async function onSubmit(e: FormEvent) {
+    async function onSubmit(e: SubmitEvent<HTMLFormElement>) {
         e.preventDefault();
         setError(null);
         setLoading(true);

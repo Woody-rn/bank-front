@@ -3,9 +3,13 @@ import { Heading } from '@chakra-ui/react';
 import { AuthProvider, useAuth } from './auth/AuthContext';
 import { ProtectedRoute } from './auth/ProtectedRoute';
 import { Layout } from './components/Layout';
+import { Toaster } from './components/ui/toaster'; // Подключаем тостер
 import { LoginPage } from './pages/LoginPage';
+import { MyCardsPage } from './pages/user/MyCardsPage';
+import { CardDetailPage } from './pages/user/CardDetailPage';
+import { TransfersPage } from './pages/user/TransfersPage';
 
-// временные заглушки — заменим в Блоке 4
+// временные заглушки — заменим в следующих блоках
 function Stub({ title }: { title: string }) {
     return <Heading>{title} — скоро</Heading>;
 }
@@ -19,6 +23,9 @@ function HomeRedirect() {
 export default function App() {
     return (
         <AuthProvider>
+            {/* Компонент для отображения уведомлений (тостов) */}
+            <Toaster />
+
             <Routes>
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/" element={<HomeRedirect />} />
@@ -26,8 +33,9 @@ export default function App() {
                 {/* USER */}
                 <Route element={<ProtectedRoute role="USER" />}>
                     <Route element={<Layout />}>
-                        <Route path="/user/cards" element={<Stub title="Мои карты" />} />
-                        <Route path="/user/transfers" element={<Stub title="Переводы" />} />
+                        <Route path="/user/cards" element={<MyCardsPage />} />
+                        <Route path="/user/cards/:id" element={<CardDetailPage />} />
+                        <Route path="/user/transfers" element={<TransfersPage />} />
                     </Route>
                 </Route>
 
