@@ -1,20 +1,20 @@
-import { Box, Flex, Heading, HStack, Button, Text, Spacer } from '@chakra-ui/react';
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { useAuth } from '../auth/AuthContext';
+import {Box, Flex, Heading, HStack, Button, Text, Spacer} from '@chakra-ui/react';
+import {NavLink, Outlet, useNavigate} from 'react-router-dom';
+import {useAuth} from '../auth/AuthContext';
 
 export function Layout() {
-    const { user, isAdmin, logout } = useAuth();
+    const {user, isAdmin, logout} = useAuth();
     const navigate = useNavigate();
 
     const userLinks = [
-        { to: '/user/cards', label: 'Мои карты' },
-        { to: '/user/transfers', label: 'Переводы' },
+        {to: '/user/cards', label: 'Мои карты'},
+        {to: '/user/transfers', label: 'Переводы'},
     ];
 
     const adminLinks = [
-        { to: '/admin/cards', label: 'Все карты' },
-        { to: '/admin/users', label: 'Пользователи' },
-        { to: '/admin/block-requests', label: 'Заявки' },
+        {to: '/admin/cards', label: 'Все карты'},
+        {to: '/admin/users', label: 'Пользователи'},
+        {to: '/admin/block-requests', label: 'Заявки'},
     ];
 
     const links = isAdmin ? adminLinks : userLinks;
@@ -23,7 +23,8 @@ export function Layout() {
         <Flex direction="column" minH="100vh">
             <Box as="header" bg="blue.600" color="white" px={6} py={3} boxShadow="md">
                 <Flex align="center" gap={6}>
-                    <Heading size="md" cursor="pointer" onClick={() => navigate(isAdmin ? '/admin/cards' : '/user/cards')}>
+                    <Heading size="md" cursor="pointer"
+                             onClick={() => navigate(isAdmin ? '/admin/cards' : '/user/cards')}>
                         Bank Front
                     </Heading>
 
@@ -32,7 +33,7 @@ export function Layout() {
                             <NavLink
                                 key={l.to}
                                 to={l.to}
-                                style={({ isActive }) => ({
+                                style={({isActive}) => ({
                                     padding: '6px 12px',
                                     borderRadius: '6px',
                                     background: isActive ? 'rgba(255,255,255,0.2)' : 'transparent',
@@ -46,7 +47,7 @@ export function Layout() {
                         ))}
                     </HStack>
 
-                    <Spacer />
+                    <Spacer/>
 
                     <Text fontSize="sm">
                         {user?.username} ({user?.role})
@@ -58,7 +59,7 @@ export function Layout() {
             </Box>
 
             <Box as="main" flex="1" p={6} bg="gray.50">
-                <Outlet />
+                <Outlet/>
             </Box>
         </Flex>
     );

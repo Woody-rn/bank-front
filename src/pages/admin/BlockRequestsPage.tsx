@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
+import {useEffect, useState} from 'react';
 import {
     Box, Heading, Table, Button, Spinner, Center, Text, HStack
 } from '@chakra-ui/react';
-import { getPendingRequests, approveRequest, rejectRequest } from '../../api/blockRequests';
-import { toaster } from '../../components/ui/toaster';
-import type { BlockRequest, Page } from '../../types/api';
-import { Pagination } from '../../components/Pagination';
+import {getPendingRequests, approveRequest, rejectRequest} from '../../api/blockRequests';
+import {toaster} from '../../components/ui/toaster';
+import type {BlockRequest, Page} from '../../types/api';
+import {Pagination} from '../../components/Pagination';
 
 export function BlockRequestsPage() {
     const [page, setPage] = useState(0);
@@ -17,7 +17,7 @@ export function BlockRequestsPage() {
         setLoading(true);
         getPendingRequests(page, 10)
             .then(setData)
-            .catch((e) => toaster.create({ title: 'Ошибка', description: e.message, type: 'error' }))
+            .catch((e) => toaster.create({title: 'Ошибка', description: e.message, type: 'error'}))
             .finally(() => setLoading(false));
     };
 
@@ -30,20 +30,20 @@ export function BlockRequestsPage() {
         try {
             if (action === 'approve') {
                 await approveRequest(id);
-                toaster.create({ title: 'Заявка одобрена', description: 'Карта заблокирована', type: 'success' });
+                toaster.create({title: 'Заявка одобрена', description: 'Карта заблокирована', type: 'success'});
             } else {
                 await rejectRequest(id);
-                toaster.create({ title: 'Заявка отклонена', type: 'info' });
+                toaster.create({title: 'Заявка отклонена', type: 'info'});
             }
             loadData(); // перезагружаем список
         } catch (err: any) {
-            toaster.create({ title: 'Ошибка', description: err.message, type: 'error' });
+            toaster.create({title: 'Ошибка', description: err.message, type: 'error'});
         } finally {
             setActionLoadingId(null);
         }
     }
 
-    if (loading) return <Center h="50vh"><Spinner size="xl" /></Center>;
+    if (loading) return <Center h="50vh"><Spinner size="xl"/></Center>;
 
     return (
         <Box>
@@ -115,7 +115,7 @@ export function BlockRequestsPage() {
                 </Table.Root>
             </Box>
 
-            {data && <Pagination page={page} totalPages={data.totalPages} onPageChange={setPage} />}
+            {data && <Pagination page={page} totalPages={data.totalPages} onPageChange={setPage}/>}
         </Box>
     );
 }

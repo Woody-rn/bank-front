@@ -1,17 +1,17 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import {useEffect, useState, type ChangeEvent} from 'react';
+import {useNavigate} from 'react-router-dom';
 import {
     Box, Heading, Table, Badge, Button, NativeSelect, Spinner,
     Center, Text, Stack,
 } from '@chakra-ui/react';
-import { getMyCards } from '../../api/cards';
-import type { CardResponse, CardStatus, Page } from '../../types/api';
-import { Pagination } from '../../components/Pagination';
+import {getMyCards} from '../../api/cards';
+import type {CardResponse, CardStatus, Page} from '../../types/api';
+import {Pagination} from '../../components/Pagination';
 
 const statusMap: Record<CardStatus, { label: string; color: string }> = {
-    ACTIVE: { label: 'Активна', color: 'green' },
-    BLOCKED: { label: 'Заблокирована', color: 'red' },
-    EXPIRED: { label: 'Истекла', color: 'gray' },
+    ACTIVE: {label: 'Активна', color: 'green'},
+    BLOCKED: {label: 'Заблокирована', color: 'red'},
+    EXPIRED: {label: 'Истекла', color: 'gray'},
 };
 
 export function MyCardsPage() {
@@ -31,12 +31,12 @@ export function MyCardsPage() {
             .finally(() => setLoading(false));
     }, [page, status]);
 
-    function handleStatusChange(e: React.ChangeEvent<HTMLSelectElement>) {
+    function handleStatusChange(e: ChangeEvent<HTMLSelectElement>) {
         setStatus(e.target.value as CardStatus | '');
         setPage(0);
     }
 
-    if (loading) return <Center h="50vh"><Spinner size="xl" /></Center>;
+    if (loading) return <Center h="50vh"><Spinner size="xl"/></Center>;
     if (error) return <Text color="red.500">{error}</Text>;
 
     return (
@@ -52,7 +52,7 @@ export function MyCardsPage() {
                         <option value="BLOCKED">Заблокированные</option>
                         <option value="EXPIRED">Истекшие</option>
                     </NativeSelect.Field>
-                    <NativeSelect.Indicator />
+                    <NativeSelect.Indicator/>
                 </NativeSelect.Root>
             </Stack>
 
@@ -89,7 +89,8 @@ export function MyCardsPage() {
                                         </Table.Cell>
                                         <Table.Cell textAlign="end">{card.balance.toFixed(2)} ₽</Table.Cell>
                                         <Table.Cell>
-                                            <Button size="xs" variant="outline" onClick={() => navigate(`/user/cards/${card.id}`)}>
+                                            <Button size="xs" variant="outline"
+                                                    onClick={() => navigate(`/user/cards/${card.id}`)}>
                                                 Подробнее
                                             </Button>
                                         </Table.Cell>
@@ -103,7 +104,7 @@ export function MyCardsPage() {
 
             {/* Пагинация рендерится только если данные есть */}
             {data && (
-                <Pagination page={page} totalPages={data.totalPages} onPageChange={setPage} />
+                <Pagination page={page} totalPages={data.totalPages} onPageChange={setPage}/>
             )}
         </Box>
     );

@@ -1,4 +1,4 @@
-import { useState, type SubmitEvent } from 'react';
+import {useState, type SubmitEvent} from 'react';
 import {
     Box,
     Button,
@@ -9,11 +9,11 @@ import {
     Stack,
     Text,
 } from '@chakra-ui/react';
-import { useAuth } from '../auth/AuthContext';
-import { ApiError } from '../api/client';
+import {useAuth} from '../auth/AuthContext';
+import {ApiError} from '../api/client';
 
 export function LoginPage() {
-    const { login } = useAuth();
+    const {login} = useAuth();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState<string | null>(null);
@@ -24,7 +24,7 @@ export function LoginPage() {
         setError(null);
         setLoading(true);
         try {
-            await login({ username, password });
+            await login({username, password});
         } catch (err) {
             if (err instanceof ApiError) setError(err.message);
             else setError('Не удалось войти');

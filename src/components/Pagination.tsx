@@ -1,4 +1,4 @@
-import { Button, HStack, Text } from '@chakra-ui/react';
+import {Button, HStack, Text} from '@chakra-ui/react';
 
 interface Props {
     page: number;
@@ -6,7 +6,7 @@ interface Props {
     onPageChange: (page: number) => void;
 }
 
-export function Pagination({ page, totalPages, onPageChange }: Props) {
+export function Pagination({page, totalPages, onPageChange}: Props) {
     if (totalPages <= 1) return null;
 
     return (

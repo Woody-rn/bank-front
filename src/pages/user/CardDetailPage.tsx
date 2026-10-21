@@ -1,21 +1,21 @@
-import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import {useEffect, useState} from 'react';
+import {useParams, useNavigate} from 'react-router-dom';
 import {
     Box, Heading, Text, Button, Spinner, Center, Stack,
     Badge, Card, SimpleGrid, HStack,
 } from '@chakra-ui/react';
-import { getMyCard, requestBlock } from '../../api/cards';
-import { toaster } from '../../components/ui/toaster';
-import type { CardResponse, CardStatus } from '../../types/api';
+import {getMyCard, requestBlock} from '../../api/cards';
+import {toaster} from '../../components/ui/toaster';
+import type {CardResponse, CardStatus} from '../../types/api';
 
 const statusMap: Record<CardStatus, { label: string; color: string }> = {
-    ACTIVE: { label: 'Активна', color: 'green' },
-    BLOCKED: { label: 'Заблокирована', color: 'red' },
-    EXPIRED: { label: 'Истекла', color: 'gray' },
+    ACTIVE: {label: 'Активна', color: 'green'},
+    BLOCKED: {label: 'Заблокирована', color: 'red'},
+    EXPIRED: {label: 'Истекла', color: 'gray'},
 };
 
 export function CardDetailPage() {
-    const { id } = useParams<{ id: string }>();
+    const {id} = useParams<{ id: string }>();
     const navigate = useNavigate();
 
     const [card, setCard] = useState<CardResponse | null>(null);
@@ -52,7 +52,7 @@ export function CardDetailPage() {
         }
     }
 
-    if (loading) return <Center h="50vh"><Spinner size="xl" /></Center>;
+    if (loading) return <Center h="50vh"><Spinner size="xl"/></Center>;
     if (error || !card) return <Text color="red.500">{error || 'Карта не найдена'}</Text>;
 
     const st = statusMap[card.status];

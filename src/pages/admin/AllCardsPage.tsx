@@ -1,9 +1,9 @@
 import {useEffect, useState, type SubmitEvent} from 'react';
 import {
     Box, Heading, Table, Badge, Button, Spinner, Center,
-    Dialog, Field, Input, NativeSelect, Portal, Stack
+    Dialog, Field, Input, NativeSelect, Portal, Stack, HStack
 } from '@chakra-ui/react';
-import {getAllCards, createCard, blockCard, activateCard} from '../../api/cards';
+import {getAllCards, createCard, blockCard, activateCard, deleteCard} from '../../api/cards';
 import {getUsers} from '../../api/users';
 import {toaster} from '../../components/ui/toaster';
 import type {CardResponse, CardStatus, Page, User} from '../../types/api';
@@ -25,13 +25,11 @@ export function AllCardsPage() {
     const [users, setUsers] = useState<User[]>([]);
     const [createLoading, setCreateLoading] = useState(false);
 
-    // Форма новой карты
     const [userId, setUserId] = useState('');
     const [holderName, setHolderName] = useState('');
     const [expMonth, setExpMonth] = useState('12');
     const [expYear, setExpYear] = useState('2030');
 
-    // Загрузка карт
     const loadCards = () => {
         setLoading(true);
         getAllCards(page, 10)
@@ -44,7 +42,6 @@ export function AllCardsPage() {
         loadCards();
     }, [page]);
 
-    // Загрузка юзеров при открытии модалки
     useEffect(() => {
         if (isOpen && users.length === 0) {
             getUsers(0, 100).then((res) => {
@@ -66,7 +63,7 @@ export function AllCardsPage() {
             });
             toaster.create({title: 'Успех', description: 'Карта создана', type: 'success'});
             setIsOpen(false);
-            setHolderName(''); // сброс
+            setHolderName('');
             setPage(0);
             loadCards();
         } catch (err: any) {
@@ -85,6 +82,17 @@ export function AllCardsPage() {
                 await activateCard(card.id);
                 toaster.create({title: 'Карта активирована', type: 'success'});
             }
+            loadCards();
+        } catch (err: any) {
+            toaster.create({title: 'Ошибка', description: err.message, type: 'error'});
+        }
+    }
+
+    async function handleDeleteCard(card: CardResponse) {
+        if (!window.confirm(`Удалить карту ${card.maskedNumber}?`)) return;
+        try {
+            await deleteCard(card.id);
+            toaster.create({title: 'Карта удалена', type: 'success'});
             loadCards();
         } catch (err: any) {
             toaster.create({title: 'Ошибка', description: err.message, type: 'error'});
@@ -179,13 +187,23 @@ export function AllCardsPage() {
                                         <Table.Cell><Badge colorPalette={st.color}>{st.label}</Badge></Table.Cell>
                                         <Table.Cell textAlign="end">{card.balance.toFixed(2)} ₽</Table.Cell>
                                         <Table.Cell>
-                                            {card.status === 'ACTIVE' ? (
-                                                <Button size="xs" colorPalette="red" variant="outline"
-                                                        onClick={() => handleToggleStatus(card)}>Блокировать</Button>
-                                            ) : (
-                                                <Button size="xs" colorPalette="green" variant="outline"
-                                                        onClick={() => handleToggleStatus(card)}>Активировать</Button>
-                                            )}
+                                            <HStack gap={2}>
+                                                {card.status === 'ACTIVE' ? (
+                                                    <Button size="xs" colorPalette="red" variant="outline"
+                                                            onClick={() => handleToggleStatus(card)}>
+                                                        Блокировать
+                                                    </Button>
+                                                ) : (
+                                                    <Button size="xs" colorPalette="green" variant="outline"
+                                                            onClick={() => handleToggleStatus(card)}>
+                                                        Активировать
+                                                    </Button>
+                                                )}
+                                                <Button size="xs" colorPalette="gray" variant="outline"
+                                                        onClick={() => handleDeleteCard(card)}>
+                                                    Удалить
+                                                </Button>
+                                            </HStack>
                                         </Table.Cell>
                                     </Table.Row>
                                 );

@@ -1,8 +1,8 @@
-import { api } from './client';
-import type { CreateUserRequest, Page, User } from '../types/api';
+import {api} from './client';
+import type {CreateUserRequest, Page, User} from '../types/api';
 
 export function getUsers(page = 0, size = 10): Promise<Page<User>> {
-    const params = new URLSearchParams({ page: String(page), size: String(size) });
+    const params = new URLSearchParams({page: String(page), size: String(size)});
     return api.get(`/api/admin/users?${params.toString()}`);
 }
 

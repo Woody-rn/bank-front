@@ -1,13 +1,13 @@
-import { useEffect, useState, type SubmitEvent } from 'react';
+import {useEffect, useState, type SubmitEvent} from 'react';
 import {
     Box, Heading, Button, Input, Stack, Text, Card, NativeSelect,
     Table, Spinner, Center, Field, SimpleGrid
 } from '@chakra-ui/react';
-import { getMyCards } from '../../api/cards';
-import { getTransferHistory, transfer } from '../../api/transfers';
-import { toaster } from '../../components/ui/toaster';
-import type { CardResponse, Page, TransferResponse } from '../../types/api';
-import { Pagination } from '../../components/Pagination';
+import {getMyCards} from '../../api/cards';
+import {getTransferHistory, transfer} from '../../api/transfers';
+import {toaster} from '../../components/ui/toaster';
+import type {CardResponse, Page, TransferResponse} from '../../types/api';
+import {Pagination} from '../../components/Pagination';
 
 export function TransfersPage() {
     // Состояние карт
@@ -40,7 +40,7 @@ export function TransfersPage() {
                     }
                 }
             })
-            .catch((e) => toaster.create({ title: 'Ошибка загрузки карт', description: e.message, type: 'error' }))
+            .catch((e) => toaster.create({title: 'Ошибка загрузки карт', description: e.message, type: 'error'}))
             .finally(() => setLoadingCards(false));
     }, []);
 
@@ -50,14 +50,14 @@ export function TransfersPage() {
         setLoadingHistory(true);
         getTransferHistory(Number(historyCardId), historyPage, 5)
             .then(setHistoryData)
-            .catch((e) => toaster.create({ title: 'Ошибка истории', description: e.message, type: 'error' }))
+            .catch((e) => toaster.create({title: 'Ошибка истории', description: e.message, type: 'error'}))
             .finally(() => setLoadingHistory(false));
     }, [historyCardId, historyPage]);
 
     async function handleTransfer(e: SubmitEvent<HTMLFormElement>) {
         e.preventDefault();
         if (fromCardId === toCardId) {
-            toaster.create({ title: 'Ошибка', description: 'Нельзя перевести на ту же карту', type: 'error' });
+            toaster.create({title: 'Ошибка', description: 'Нельзя перевести на ту же карту', type: 'error'});
             return;
         }
 
@@ -69,7 +69,7 @@ export function TransfersPage() {
                 amount: Number(amount),
                 description: description || undefined,
             });
-            toaster.create({ title: 'Успех', description: 'Перевод выполнен', type: 'success' });
+            toaster.create({title: 'Успех', description: 'Перевод выполнен', type: 'success'});
 
             // Очищаем форму и обновляем историю
             setAmount('');
@@ -80,13 +80,13 @@ export function TransfersPage() {
                 getTransferHistory(Number(historyCardId), 0, 5).then(setHistoryData);
             }
         } catch (err: any) {
-            toaster.create({ title: 'Ошибка перевода', description: err.message, type: 'error' });
+            toaster.create({title: 'Ошибка перевода', description: err.message, type: 'error'});
         } finally {
             setSubmitting(false);
         }
     }
 
-    if (loadingCards) return <Center h="50vh"><Spinner size="xl" /></Center>;
+    if (loadingCards) return <Center h="50vh"><Spinner size="xl"/></Center>;
 
     if (cards.length < 2) {
         return (
@@ -101,7 +101,7 @@ export function TransfersPage() {
         <Box>
             <Heading mb={6} size="lg">Переводы</Heading>
 
-            <SimpleGrid columns={{ base: 1, md: 2 }} gap={8}>
+            <SimpleGrid columns={{base: 1, md: 2}} gap={8}>
                 {/* ЛЕВАЯ КОЛОНКА: ФОРМА */}
                 <Card.Root>
                     <Card.Header>
@@ -113,28 +113,30 @@ export function TransfersPage() {
                                 <Field.Root>
                                     <Field.Label>С карты (списание)</Field.Label>
                                     <NativeSelect.Root>
-                                        <NativeSelect.Field value={fromCardId} onChange={(e) => setFromCardId(e.target.value)}>
+                                        <NativeSelect.Field value={fromCardId}
+                                                            onChange={(e) => setFromCardId(e.target.value)}>
                                             {cards.map((c) => (
                                                 <option key={c.id} value={c.id}>
                                                     {c.maskedNumber} ({c.balance.toFixed(2)} ₽)
                                                 </option>
                                             ))}
                                         </NativeSelect.Field>
-                                        <NativeSelect.Indicator />
+                                        <NativeSelect.Indicator/>
                                     </NativeSelect.Root>
                                 </Field.Root>
 
                                 <Field.Root>
                                     <Field.Label>На карту (зачисление)</Field.Label>
                                     <NativeSelect.Root>
-                                        <NativeSelect.Field value={toCardId} onChange={(e) => setToCardId(e.target.value)}>
+                                        <NativeSelect.Field value={toCardId}
+                                                            onChange={(e) => setToCardId(e.target.value)}>
                                             {cards.filter(c => String(c.id) !== fromCardId).map((c) => (
                                                 <option key={c.id} value={c.id}>
                                                     {c.maskedNumber}
                                                 </option>
                                             ))}
                                         </NativeSelect.Field>
-                                        <NativeSelect.Indicator />
+                                        <NativeSelect.Indicator/>
                                     </NativeSelect.Root>
                                 </Field.Root>
 
@@ -177,18 +179,21 @@ export function TransfersPage() {
                             <NativeSelect.Root size="sm">
                                 <NativeSelect.Field
                                     value={historyCardId}
-                                    onChange={(e) => { setHistoryCardId(e.target.value); setHistoryPage(0); }}
+                                    onChange={(e) => {
+                                        setHistoryCardId(e.target.value);
+                                        setHistoryPage(0);
+                                    }}
                                 >
                                     {cards.map((c) => (
                                         <option key={c.id} value={c.id}>{c.maskedNumber}</option>
                                     ))}
                                 </NativeSelect.Field>
-                                <NativeSelect.Indicator />
+                                <NativeSelect.Indicator/>
                             </NativeSelect.Root>
                         </Stack>
 
                         {loadingHistory ? (
-                            <Center py={8}><Spinner /></Center>
+                            <Center py={8}><Spinner/></Center>
                         ) : !historyData || historyData.content.length === 0 ? (
                             <Text color="gray.500" textAlign="center" py={4}>Переводов пока нет</Text>
                         ) : (
@@ -206,7 +211,8 @@ export function TransfersPage() {
                                             <Table.Row key={t.id}>
                                                 <Table.Cell fontSize="xs">{t.fromMaskedNumber}</Table.Cell>
                                                 <Table.Cell fontSize="xs">{t.toMaskedNumber}</Table.Cell>
-                                                <Table.Cell textAlign="end" fontWeight="bold" color={t.fromMaskedNumber === cards.find(c => String(c.id) === historyCardId)?.maskedNumber ? "red.500" : "green.500"}>
+                                                <Table.Cell textAlign="end" fontWeight="bold"
+                                                            color={t.fromMaskedNumber === cards.find(c => String(c.id) === historyCardId)?.maskedNumber ? "red.500" : "green.500"}>
                                                     {t.amount.toFixed(2)} ₽
                                                 </Table.Cell>
                                             </Table.Row>

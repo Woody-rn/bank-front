@@ -1,5 +1,5 @@
-import { api } from './client';
-import type { Page, TransferRequest, TransferResponse } from '../types/api';
+import {api} from './client';
+import type {Page, TransferRequest, TransferResponse} from '../types/api';
 
 export function transfer(data: TransferRequest): Promise<TransferResponse> {
     return api.post('/api/user/transfers', data);
