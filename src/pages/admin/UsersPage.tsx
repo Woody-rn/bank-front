@@ -4,11 +4,14 @@ import {
     Dialog, Field, Input, NativeSelect, Portal, Stack
 } from '@chakra-ui/react';
 import {getUsers, createUser, deleteUser, getUser} from '../../api/users';
+import {useAuth} from '../../auth/AuthContext';
 import {toaster} from '../../components/ui/toaster';
 import type {Page, User, Role} from '../../types/api';
 import {Pagination} from '../../components/Pagination';
 
 export function UsersPage() {
+    const {user: currentUser} = useAuth();
+
     const [page, setPage] = useState(0);
     const [data, setData] = useState<Page<User> | null>(null);
     const [loading, setLoading] = useState(true);
@@ -181,14 +184,18 @@ export function UsersPage() {
                                     </Table.Cell>
                                     <Table.Cell>
                                         {u.enabled ? (
-                                            <Button
-                                                size="xs"
-                                                colorPalette="red"
-                                                variant="outline"
-                                                onClick={() => handleDelete(u.id, u.username)}
-                                            >
-                                                Отключить
-                                            </Button>
+                                            u.username === currentUser?.username ? (
+                                                <Text fontSize="xs" color="gray.500">Это вы</Text>
+                                            ) : (
+                                                <Button
+                                                    size="xs"
+                                                    colorPalette="red"
+                                                    variant="outline"
+                                                    onClick={() => handleDelete(u.id, u.username)}
+                                                >
+                                                    Отключить
+                                                </Button>
+                                            )
                                         ) : (
                                             <Text fontSize="xs" color="gray.500">—</Text>
                                         )}
