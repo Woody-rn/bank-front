@@ -1,32 +1,78 @@
-# React + TypeScript + Vite
+# Bank Front
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Frontend-приложение для системы управления банковскими картами. Разработано как SPA на React с разделением ролей (ADMIN / USER).
 
-Currently, two official plugins are available:
+🔗 **[Ссылка на бэкенд (Bank REST API)](https://github.com/Woody-rn/bank-rest)**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🛠 Стек
+- **React 18** + **TypeScript**
+- **Vite** (сборка и dev-сервер)
+- **Chakra UI** (компоненты и дизайн)
+- **React Router v6** (роутинг и защита путей)
 
-## React Compiler
+## ✨ Возможности
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Для пользователя (USER)
+- Просмотр своих карт с фильтрацией по статусу.
+- Просмотр детальной информации и баланса карты.
+- Переводы между своими картами с валидацией.
+- История операций (пагинация).
+- Запрос на блокировку карты.
 
-## Expanding the Oxlint configuration
+### Для администратора (ADMIN)
+- Просмотр всех карт и пользователей системы.
+- Создание новых карт и пользователей.
+- Блокировка / активация / мягкое удаление карт.
+- Отключение пользователей (с защитой от отключения самого себя и последнего админа).
+- Обработка заявок на блокировку карт (одобрение/отклонение).
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+## 🚀 Быстрый старт
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+### 1. Установка зависимостей
+
+```bash
+npm install
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+### 2. Настройка окружения (опционально)
+
+Для локальной разработки настройка не требуется, так как Vite автоматически проксирует запросы к бэкенду (настройки в `vite.config.ts`).
+
+Если вы планируете запускать фронтенд в продакшене, создайте файл `.env` в корне проекта:
+
+```env
+VITE_API_URL=http://localhost:8080
+```
+*(Замените адрес на реальный URL вашего развернутого бэкенда).*
+
+### 3. Запуск
+
+Для работы фронтенда необходимо, чтобы бэкенд был запущен на порту 8080 (см. инструкцию в репозитории бэкенда).
+
+```bash
+npm run dev
+```
+
+Приложение откроется по адресу: http://localhost:5173
+
+## 🧑‍💻 Тестовые аккаунты
+
+| Роль | Логин | Пароль |
+|---|---|---|
+| Администратор | `admin` | `admin123` |
+| Пользователь | `user` | `user123` |
+
+## 📸 Скриншоты
+
+*(Сюда вставим скриншоты)*
+- **Экран входа**
+- **Список карт пользователя**
+- **Переводы**
+- **Панель администратора (Все карты)**
+- **Заявки на блокировку**
+
+## 📋 Архитектурные решения
+- **JWT-авторизация** с хранением токена в `localStorage`.
+- **Авто-разлогин**: если бэкенд возвращает `401 Unauthorized` (истек токен), клиент автоматически очищает сессию и редиректит на страницу входа.
+- **Защищенные роуты**: доступ к админским страницам заблокирован для роли USER на уровне роутера.
+- **Типизация API**: все ответы и запросы к бэкенду строго типизированы в `src/types/api.ts`.
