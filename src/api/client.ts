@@ -3,6 +3,9 @@ import type { ErrorResponse } from '../types/api';
 const TOKEN_KEY = 'bank_token';
 const USER_KEY = 'bank_user';
 
+// Если переменная задана (прод) — используем её. Если нет (dev) — пустая строка, чтобы работал Vite Proxy.
+const API_BASE = import.meta.env.VITE_API_URL || '';
+
 export function getToken(): string | null {
     return localStorage.getItem(TOKEN_KEY);
 }
@@ -46,12 +49,11 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
     };
     if (token) headers['Authorization'] = `Bearer ${token}`;
 
-    const res = await fetch(path, { ...options, headers });
+    // Вот здесь мы подставляем API_BASE. Если он пустой (dev), запрос пойдет на /api/...
+    const res = await fetch(`${API_BASE}${path}`, { ...options, headers });
 
     if (res.status === 401) {
-        // токен истёк или невалиден — чистим и кидаем ошибку наверх
         clearAuth();
-        // Выстреливаем событие, чтобы AuthProvider узнал о разлогине
         window.dispatchEvent(new Event('auth:unauthorized'));
         throw new ApiError(401, 'Сессия истекла, войдите заново');
     }
@@ -62,16 +64,13 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
             const body = (await res.json()) as ErrorResponse;
             if (body?.message) message = body.message;
         } catch {
-            // тело не JSON — оставляем дефолтное сообщение
+            // ignore
         }
         throw new ApiError(res.status, message);
     }
 
-    // Если тело пустое (204, 202 или просто нет текста)
     const text = await res.text();
-    if (!text) {
-        return undefined as T;
-    }
+    if (!text) return undefined as T;
 
     try {
         return JSON.parse(text) as T;
